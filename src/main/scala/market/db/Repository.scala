@@ -20,7 +20,7 @@ abstract class Repository[
 
   def findByQuery(query: EntityQuery): Query[EntityTable, Entity, Seq]
 
-  def tableQuery: TableQuery[EntityTable] = TableQuery[EntityTable]
+  def tableQuery: TableQuery[EntityTable]
 
 
   def findOneBy(query: EntityQuery): DBIOAction[Entity, NoStream, Effect.Read with Effect] = {

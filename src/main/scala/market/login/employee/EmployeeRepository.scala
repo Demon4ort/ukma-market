@@ -17,7 +17,7 @@ class EmployeeRepository(implicit override val ec: ExecutionContext) extends Rep
   override def findByQuery(query: Query): SQLiteProfile.api.Query[Employees, Employee, Seq] =
     tableQuery.filter(_.uuid === query.uuid)
 
-
+  override def tableQuery = TableQuery[Employees]
 }
 
 object EmployeeRepository {
