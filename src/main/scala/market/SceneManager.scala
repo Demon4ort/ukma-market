@@ -11,8 +11,8 @@ object SceneManager {
 
   type SceneType = Scenes.Value
   object Scenes extends Enumeration {
-    val Start = Value("/login/StartForm.fxml")
-    val Login = Value("/login/LoginForm.fxml")
+    val Start = Value("/fxml/login/StartForm.fxml")
+    val Login = Value("/fxml/login/LoginForm.fxml")
     //    val SignUp = Value(???)
   }
 
