@@ -9,14 +9,15 @@
    <children>
       <VBox layoutX="210.0" layoutY="76.0" prefHeight="237.0" prefWidth="200.0" spacing="50.0">
          <children>
-            <Button fx:id="login" mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="115.0" text="Login">
+            <Button fx:id="login" mnemonicParsing="false" onAction="#handleLogin" prefHeight="40.0" prefWidth="115.0"
+                    text="Login">
                <font>
-                  <Font name="Fira Code Regular" size="20.0" />
+                  <Font name="Fira Code Regular" size="20.0"/>
                </font>
             </Button>
-            <Button fx:id="signUp" mnemonicParsing="false" prefWidth="115.0" text="Sign Up">
+            <Button fx:id="signUp" mnemonicParsing="false" onAction="#handleSignUp" prefWidth="115.0" text="Sign Up">
                <font>
-                  <Font name="Fira Code Regular" size="20.0" />
+                  <Font name="Fira Code Regular" size="20.0"/>
                </font>
             </Button>
          </children>

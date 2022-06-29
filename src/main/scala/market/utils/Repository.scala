@@ -1,32 +1,37 @@
-package market.db
+package market.utils
 
+import com.typesafe.config.ConfigFactory
+import market.utils.Errors.DatabaseError
 import slick.dbio.Effect
 import slick.jdbc
 import slick.jdbc.SQLiteProfile
 import slick.jdbc.SQLiteProfile.api._
 import slick.sql.{FixedSqlAction, FixedSqlStreamingAction, SqlAction}
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.reflect.ClassTag
 
 
-//ER-модель складається з 6 сутностей: Працівник, Чек, Карта клієнта, Товар у магазині,
+//ER-модель складається з 6 сутностей: Працівник, Чек, Карта клієнта, Товар у магазині, Товар, Категорія.
 abstract class Repository[
   Entity: ClassTag,
   EntityTable <: Table[Entity],
-  EntityQuery](implicit val ec: ExecutionContext) {
+  EntityQuery] {
 
-  implicit val db: jdbc.SQLiteProfile.backend.Database = Database.forConfig("slick-sqlite")
+  implicit val db: jdbc.SQLiteProfile.backend.Database = Database.forConfig("db", ConfigFactory.load("application.conf"))
 
   def findByQuery(query: EntityQuery): Query[EntityTable, Entity, Seq]
 
   def tableQuery: TableQuery[EntityTable]
 
 
+  def init = tableQuery.schema.createIfNotExists
+
   def findOneBy(query: EntityQuery): DBIOAction[Entity, NoStream, Effect.Read with Effect] = {
     findByQuery(query).take(1).result.headOption.flatMap {
       case Some(entity) => DBIO.successful(entity)
-      case None => DBIO.failed(new Exception("not found"))
+      case None => DBIO.failed(DatabaseError("Entity not Found"))
     }
   }
 
@@ -71,19 +76,9 @@ abstract class Repository[
   def deleteAll(): FixedSqlAction[Int, NoStream, Effect.Write] =
     tableQuery.delete
 
-
 }
 
 object Repository {
-
-  //  private def run[R](actions: DBIOAction[R, NoStream, Nothing]): R = {
-  //    val db: SQLiteProfile.backend.Database = Database.forConfig("mydb")
-  //    try {
-  //      Await.result(db.run(actions), Duration.Inf)
-  //    } finally {
-  //      db.close()
-  //    }
-  //  }
 
   def enumMapper[E <: Enumeration](enum: E): BaseColumnType[E#Value] = {
     MappedColumnType.base[E#Value, String](_.toString, string => enum.withName(string))

@@ -1,11 +1,12 @@
 package market.login.employee
 
+import market.utils.Repository.enumMapper
 import market.login.employee.Employee.{Address, PhoneNumber, Position}
 
-import java.time.LocalDateTime
+import java.time.{LocalDate, LocalDateTime}
+import slick.jdbc.SQLiteProfile.api._
 
 
-//  Товар, Категорія.
 //    Працівник
 //  Атрибути працівників:
 //  ID_працівника (первинний ключ),
@@ -34,13 +35,14 @@ import java.time.LocalDateTime
 
 
 case class Employee(uuid: String,
+                    password: String,
                     surname: String,
                     name: String,
                     patronymic: Option[String],
                     position: Position,
                     salary: Double,
-                    dateOfBirth: LocalDateTime,
-                    dateOfStart: LocalDateTime,
+                    dateOfBirth: LocalDate,
+                    dateOfStart: LocalDate,
                     phoneNumber: PhoneNumber,
                     address: Address)
 
@@ -57,6 +59,51 @@ object Employee {
   object Positions extends Enumeration {
     val Cashier = Value("CASHIER")
     val Manager = Value("MANAGER")
+  }
+
+  implicit val phoneNumberColumnType: BaseColumnType[PhoneNumber] = MappedColumnType.base[PhoneNumber, String](
+    { case PhoneNumber(number) => number },
+    { number => PhoneNumber(number) }
+  )
+  implicit val positionColumnType: BaseColumnType[Position] = enumMapper(Positions)
+
+  class Employees(tag: Tag) extends Table[Employee](tag, "employee") {
+
+    def uuid = column[String]("uuid", O.PrimaryKey)
+
+    def password = column[String]("password")
+
+    def name = column[String]("name")
+
+    def surname = column[String]("surname")
+
+    def patronymic = column[Option[String]]("patronymic")
+
+    def position = column[Position]("position")
+
+    def salary = column[Double]("salary")
+
+    def dateOfBirth = column[LocalDate]("date_of_birth")
+
+    def dateOfStart = column[LocalDate]("date_of_start")
+
+    def phoneNumber = column[PhoneNumber]("phone_number")
+
+    def city = column[String]("city")
+
+    def street = column[String]("street")
+
+    def index = column[String]("post_index")
+
+    def address = (city, street, index) <> (Address.tupled, Address.unapply)
+
+    override def * = (
+      uuid, password, name,
+      surname, patronymic,
+      position, salary,
+      dateOfBirth, dateOfStart,
+      phoneNumber, address
+    ) <> (Employee.tupled, Employee.unapply)
   }
 
 }

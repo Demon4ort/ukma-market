@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="791.0" prefWidth="794.0" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="market.login.SignUpController">
+   <children>
+      <VBox layoutX="212.0" layoutY="13.0" prefHeight="771.0" prefWidth="370.0" spacing="10.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" textAlignment="CENTER" wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="18.0"/>
+               </font>
+            </Text>
+            <Text fx:id="loginText" fill="RED" layoutX="30.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="login" layoutX="30.0" layoutY="86.0" promptText="login">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="nameText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="name" promptText="name">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="surnameText" fill="RED" layoutX="30.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="surname" layoutX="30.0" layoutY="106.0" promptText="surname">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="patronymicText" fill="RED" layoutX="30.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="patronymic" layoutX="30.0" layoutY="106.0" promptText="patronymic">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="passwordText" fill="RED" layoutX="30.0" layoutY="244.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <PasswordField fx:id="password" promptText="password"/>
+            <PasswordField fx:id="passwordAgain" promptText="password again"/>
+            <ChoiceBox fx:id="position" prefHeight="26.0" prefWidth="319.0"/>
+            <DatePicker fx:id="dateOfBirth" promptText="date of birth"/>
+            <Text fx:id="phoneNumberText" fill="RED" layoutX="30.0" layoutY="72.0" strokeType="OUTSIDE"
+                  strokeWidth="0.0" wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="phoneNumber" layoutX="30.0" layoutY="86.0" promptText="phone number">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="cityText" fill="RED" layoutX="30.0" layoutY="422.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="city" layoutX="30.0" layoutY="436.0" promptText="city">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="streetText" fill="RED" layoutX="30.0" layoutY="483.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="street" layoutX="30.0" layoutY="497.0" promptText="street">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <Text fx:id="indexText" fill="RED" layoutX="30.0" layoutY="544.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                  wrappingWidth="300.0">
+               <font>
+                  <Font name="Fira Code Regular" size="10.0"/>
+               </font>
+            </Text>
+            <TextField fx:id="index" layoutX="30.0" layoutY="558.0" promptText="index">
+               <font>
+                  <Font size="14.0"/>
+               </font>
+            </TextField>
+            <HBox prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+               <children>
+                  <Button fx:id="cancel" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" textFill="RED">
+                     <font>
+                        <Font name="Fira Code Regular" size="13.0"/>
+                     </font>
+                  </Button>
+                  <Button fx:id="signUp" mnemonicParsing="false" onAction="#handleSignUp" text="Sign Up"
+                          textFill="#2b7c02">
+                     <font>
+                        <Font name="Fira Code Regular" size="13.0"/>
+                     </font>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="70.0" right="70.0" top="20.0"/>
+               </padding>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+         </padding>
+      </VBox>
+   </children>
+</AnchorPane>

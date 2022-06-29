@@ -41,7 +41,8 @@ libraryDependencies ++= javafxModules.map(m => "org.openjfx" % s"javafx-$m" % "1
 
 
 libraryDependencies ++= Seq(
-  "org.flywaydb" % "flyway-core" % "8.5.13",
+  //  "org.flywaydb" % "flyway-core" % "8.5.13",
+  "org.typelevel" %% "cats-core" % "2.6.1",
   "com.typesafe.slick" %% "slick" % "3.3.3",
   "org.xerial" % "sqlite-jdbc" % "3.36.0.3",
   "org.slf4j" % "slf4j-nop" % "1.7.36",
