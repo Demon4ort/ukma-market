@@ -1,5 +1,6 @@
 package market.utils
 
+import cats.instances.string
 import com.typesafe.config.ConfigFactory
 import market.utils.Errors.DatabaseError
 import slick.dbio.Effect
@@ -19,7 +20,9 @@ abstract class Repository[
   EntityTable <: Table[Entity],
   EntityQuery] {
 
-  implicit val db: jdbc.SQLiteProfile.backend.Database = Database.forConfig("db", ConfigFactory.load("application.conf"))
+
+  //  implicit val db: jdbc.SQLiteProfile.backend.Database = Database.forConfig("db", ConfigFactory.load("application.conf"))
+  implicit val db: jdbc.SQLiteProfile.backend.Database
 
   def findByQuery(query: EntityQuery): Query[EntityTable, Entity, Seq]
 
@@ -80,8 +83,8 @@ abstract class Repository[
 
 object Repository {
 
-  def enumMapper[E <: Enumeration](enum: E): BaseColumnType[E#Value] = {
-    MappedColumnType.base[E#Value, String](_.toString, string => enum.withName(string))
+  def enumMapper[E <: Enumeration](`enum`: E): BaseColumnType[E#Value] = {
+    MappedColumnType.base[E#Value, String](_.toString, string => `enum`.withName(string))
   }
 
   final implicit class RepositoryOps[R](val actions: DBIOAction[R, NoStream, Nothing]) extends AnyVal {

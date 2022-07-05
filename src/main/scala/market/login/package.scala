@@ -1,10 +1,8 @@
 package market
 
+import scalafx.scene.control.Alert
 import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control.ButtonType.{No, OK, Yes}
-import scalafx.scene.control.TextFormatter.Change
-import scalafx.scene.control.{Alert, TextFormatter}
-import scalafx.util.converter.IntStringConverter
 
 package object login {
 
@@ -14,11 +12,10 @@ package object login {
 
   val PasswordsShouldBeIdentical = "Passwords should be identical"
 
-  def nameShouldBeLonger(i: Int = 8) = s"User name should be longer than $i symbols"
-
   def lengthCheck(str: String, num: Int = 8): Boolean = str.length > num
 
   object Alerts {
+
     def employeeNotFoundAlert: Alert = new Alert(AlertType.Error) {
       title = "Error when logging in"
       headerText = "Can not find such employee account."

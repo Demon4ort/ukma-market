@@ -2,28 +2,28 @@ package market.login
 
 import cats.implicits.{catsSyntaxOptionId, none}
 import javafx.fxml.FXML
-import market.{App, SceneManager}
-import market.utils.Alerts.unknownError
 import market.SceneManager.Scenes
-import market.login.employee.Employee
-import market.login.employee.Employee.{Address, PhoneNumber, Position, Positions}
-import market.login.employee.EmployeeService.EmployeeServiceDependency
+import market.login.Alerts.shouldBeYoungerThan18
+import market.main.credentials.{Address, PhoneNumber}
+import market.main.employee.Employee
+import market.main.employee.Employee.{Position, Positions}
+import market.main.employee.EmployeeService.EmployeeServiceDependency
+import market.utils.Alerts.unknownError
 import market.utils.Errors.UserAlreadyExist
 import market.utils.Validation.TextFieldValidationOps
-import scalafxml.core.macros.sfxml
+import market.{App, SceneManager}
 import scalafx.Includes._
 import scalafx.application.JFXApp3.Stage
 import scalafx.application.Platform
-import scalafx.beans.property.ObjectProperty
-import scalafx.beans.value
 import scalafx.collections.ObservableBuffer
-import scalafx.event.{ActionEvent, WeakEventHandler}
-import scalafx.scene.control.{Button, ButtonType, ChoiceBox, DatePicker, PasswordField, TextField}
+import scalafx.event.ActionEvent
+import scalafx.scene.control._
 import scalafx.scene.text.Text
+import scalafxml.core.macros.sfxml
 
 import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
 import scala.util.{Failure, Success}
 
 @sfxml
@@ -50,6 +50,8 @@ class SignUpController(@FXML val name: TextField,
                        @FXML val indexText: Text,
                        @FXML val cancel: Button,
                        @FXML val signUp: Button) extends EmployeeServiceDependency {
+
+  App.reset
 
   position.items = ObservableBuffer(Positions.values.toSeq: _*)
   position.value = Positions.Cashier
@@ -96,9 +98,8 @@ class SignUpController(@FXML val name: TextField,
 
 
   def validation: Boolean = {
-    textFields.forall { case (f, _) => f.text.value.nonEmpty } &&
-      checkPassword(password.text.value) && validateBirthdate &&
-      phoneNumber.text.value.length == 12
+    textFields.forall { case (f, t) => f.text.value.nonEmpty && t.text.value.isEmpty } &&
+      checkPassword(password.text.value) && phoneNumber.text.value.length == 12
   }
 
 
@@ -106,32 +107,42 @@ class SignUpController(@FXML val name: TextField,
     Stage.setScene(SceneManager.switchTo(Scenes.Start))
   }
 
-  def handleSignUp(event: ActionEvent): Unit = if (validation) {
-    val toCreate = Employee(
-      uuid = login.text.value,
-      password = password.text.value,
-      surname = surname.text.value,
-      name = name.text.value,
-      patronymic = if (patronymic.text.value.isEmpty) none else patronymic.text.value.some,
-      position = position.value.value,
-      salary = 0,
-      dateOfBirth = dateOfBirth.value.value,
-      dateOfStart = LocalDate.now,
-      phoneNumber = PhoneNumber("+" + phoneNumber.text.value),
-      address = Address(city.text.value, street.text.value, index.text.value)
-    )
-    employeeService.signUp(toCreate).onComplete {
-      case Failure(UserAlreadyExist(userName)) => Platform.runLater {
-        Alerts.employeeAlreadyExists(userName)
-      }
-      case Failure(ex) => Platform.runLater {
-        ex.printStackTrace()
-        unknownError.showAndWait() match {
-          case _ => Stage.close()
+  def handleSignUp(event: ActionEvent): Unit = {
+    if (dateOfBirth.value.isNotNull.isValid && validateBirthdate) {
+      if (validation) {
+        val toCreate = Employee(
+          uuid = UUID.randomUUID().toString,
+          login = login.text.value,
+          password = password.text.value,
+          surname = surname.text.value,
+          name = name.text.value,
+          patronymic = if (patronymic.text.value.isEmpty) none else patronymic.text.value.some,
+          position = position.value.value,
+          salary = 0,
+          dateOfBirth = dateOfBirth.value.value,
+          dateOfStart = LocalDate.now,
+          phoneNumber = PhoneNumber("+" + phoneNumber.text.value),
+          address = Address(city.text.value, street.text.value, index.text.value)
+        )
+        employeeService.signUp(toCreate).onComplete {
+          case Failure(UserAlreadyExist(userName)) => Platform.runLater {
+            Alerts.employeeAlreadyExists(userName)
+          }
+          case Failure(ex) => Platform.runLater {
+            ex.printStackTrace()
+            unknownError.showAndWait() match {
+              case _ => Stage.close()
+            }
+          }
+          case Success(_) => Platform.runLater(Stage.setScene(SceneManager.switchTo(Scenes.Login)))
         }
       }
-      case Success(value) => Platform.runLater(Stage.setScene(SceneManager.switchTo(Scenes.Login)))
+    } else shouldBeYoungerThan18.showAndWait() match {
+      case Some(ButtonType.No) => Stage.close()
+      case Some(ButtonType.Yes) => dateOfBirth.value = null
+      case None => Stage.close()
     }
-  } else println(s"Validation: ${password.text.value}")
+
+  }
 
 }

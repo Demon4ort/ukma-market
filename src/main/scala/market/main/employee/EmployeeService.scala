@@ -1,15 +1,17 @@
-package market.login.employee
+package market.main.employee
 
 import cats.implicits.catsSyntaxOptionId
 import market.login.Auth
-import market.login.employee.Employee.{Address, PhoneNumber, Positions}
-import market.login.employee.EmployeeRepository.Query
+import Employee.Positions
+import EmployeeRepository.Query
+import market.main.credentials.{Address, PhoneNumber}
 import market.utils.Errors.{ApplicationException, UserAlreadyExist, WrongPasswordError}
 import market.utils.FutureFxOps
 import market.utils.Repository.RepositoryOps
 import slick.jdbc.SQLiteProfile
 
 import java.time.LocalDate
+import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
@@ -19,8 +21,9 @@ class EmployeeService {
   private implicit val db: SQLiteProfile.backend.Database = repository.db
   private val auth: Auth = Auth()
 
-  repository.init.future.futureValue
+  //  repository.init.future.futureValue
   val admin: Employee = Employee(
+    UUID.randomUUID.toString,
     "adminMaster",
     auth.hash("test12345".toCharArray),
     "admin",
@@ -37,7 +40,7 @@ class EmployeeService {
 
 
   def logIn(login: String, password: String): Future[Employee] = for {
-    employee <- repository.findOneBy(Query(uuid = login)).future
+    employee <- repository.findOneBy(Query(login = login)).future
     authenticated <- Future(auth.authenticate(password.toCharArray, employee.password))
     logged <- if (authenticated) Future.successful(employee)
     else Future.failed(ApplicationException(WrongPasswordError, Some(s"Can`t log in: $login")))

@@ -4,7 +4,7 @@ import javafx.fxml.FXML
 import scalafx.Includes._
 import market.SceneManager.Scenes
 import market.login.Alerts.employeeNotFoundAlert
-import market.login.employee.EmployeeService.EmployeeServiceDependency
+import market.main.employee.EmployeeService.EmployeeServiceDependency
 import market.{App, SceneManager}
 import scalafx.application.JFXApp3.Stage
 import scalafx.application.Platform
@@ -24,9 +24,9 @@ class LoginController(@FXML val userName: TextField,
                       @FXML val cancel: Button,
                       @FXML val login: Button) extends EmployeeServiceDependency {
 
+  App.reset
 
   def handleCancel(event: ActionEvent): Unit = {
-    App.employee.value = null
     Stage.setScene(SceneManager.switchTo(Scenes.Start))
   }
 
