@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="414.0" prefWidth="295.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Customer Card">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <TextField fx:id="surnameTextfield" promptText="Customer Surname" />
+      <Text fx:id="errorSurnameTextfield" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="nameTextfield" promptText="Customer Name" />
+      <Text fx:id="errorTextName" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="patronymicTextfield" promptText="Customer Patronymic" />
+      <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="phoneTextfield" promptText="Phone Number" />
+      <Text fx:id="errorTextPhone" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="cityTextfield" promptText="City" />
+      <Text fx:id="errorTextCity" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="streetTextFfeld" promptText="Street" />
+      <Text fx:id="errorTextStreet" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="zipTextfield" promptText="Zip Code" />
+      <Text fx:id="errorTextZip" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="percentTextfield" promptText="Percent" />
+      <Text fx:id="errorTextPercent" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Button fx:id="createButton" mnemonicParsing="false" text="Create" />
+      <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="230.0" prefWidth="329.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Store Product">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <TextField fx:id="productName" promptText="Existing Product" />
+      <Text fx:id="errorName" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="priceTextfield" promptText="Selling Price" />
+      <Text fx:id="errorPrice" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <TextField fx:id="numberTextfield" promptText="Number of Products" />
+      <Text fx:id="errorNumber" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <CheckBox mnemonicParsing="false" text="Product with Discount" />
+      <Button fx:id="createButton" mnemonicParsing="false" text="Create" />
+      <Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" />
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+</VBox>
