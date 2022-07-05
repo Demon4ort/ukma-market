@@ -89,7 +89,7 @@ VALUES (1, 'Garnyi', 'Dima', 'Danulovuch', 380987123423, 'Lviv', 'Geroyiv', 1231
        (2, 'Garbuzova', 'Anastasia', NULL, 380981234512, 'Mukolaiv', 'Kashtanova', 123412345, 12),
        (3, 'Alekseenko', 'Dmytro', 'Ostapovuch', 380670985617, 'Zaporizha', 'Malunova', 213213213, 19),
        (4, 'Malanuch', 'Yuriy', 'Pavlovuch', 380678736181, 'Zumna Voda', 'Tankova', 567432098, 2);
-CREATE TABLE Check_ (
+CREATE TABLE Receipt (
     check_number varchar(10) NOT NULL ,
     id_employee varchar(10) NOT NULL ,
     card_number varchar(13),
@@ -100,7 +100,7 @@ CREATE TABLE Check_ (
     FOREIGN KEY (id_employee) REFERENCES Employee(id_employee),
     FOREIGN KEY (card_number) REFERENCES Customer_Card(card_number)
 );
-INSERT INTO Check_ (check_number, id_employee, card_number, print_date, sum_total, vat)
+INSERT INTO Receipt (check_number, id_employee, card_number, print_date, sum_total, vat)
 VALUES (1, 1, 2, 2022-01-02, 49, 2),
        (2, 1, 4, 2022-02-02, 500, 10),
        (3, 3, 2, 2022-02-02, 1562, 15),
@@ -115,7 +115,7 @@ CREATE TABLE Sale (
     selling_price DECIMAL(13,4) NOT NULL,
     PRIMARY KEY (UPC, check_number),
     FOREIGN KEY (UPC) REFERENCES Store_Product(UPC),
-    FOREIGN KEY (check_number) REFERENCES Check_(check_number)
+    FOREIGN KEY (check_number) REFERENCES Receipt(check_number)
 );
 INSERT INTO Sale (UPC, check_number, product_number, selling_price)
 VALUES (111111111111, 1, 20, 12),

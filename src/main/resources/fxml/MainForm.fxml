@@ -2,14 +2,24 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <AnchorPane prefHeight="281.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="market.main.MainController">
     <children>
         <MenuBar fx:id="menuBar">
             <menus>
-                <Menu mnemonicParsing="false" text="File">
+                <Menu mnemonicParsing="false" text="Manage">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="Create">
+                     <graphic>
+                        <MenuButton mnemonicParsing="false" text="MenuButton">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Employee" />
+                            <MenuItem mnemonicParsing="false" text="Product" />
+                          </items>
+                        </MenuButton>
+                     </graphic></MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -17,6 +27,11 @@
                         <MenuItem mnemonicParsing="false" text="Delete" />
                     </items>
                 </Menu>
+            <Menu mnemonicParsing="false" text="Search">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Info" />
+               </items>
+            </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
                         <MenuItem mnemonicParsing="false" text="About" />
@@ -27,10 +42,11 @@
       <TableView fx:id="tableView" layoutX="-2.0" layoutY="149.0" prefHeight="450.0" prefWidth="800.0" />
       <Button fx:id="logOutButton" layoutX="723.0" layoutY="13.0" mnemonicParsing="false" text=" Log Out" />
       <TextField fx:id="textField" layoutX="14.0" layoutY="38.0" />
-      <Label fx:id="label" layoutX="15.0" layoutY="66.0" prefHeight="61.0" prefWidth="301.0" />
       <Button fx:id="deleteButton" layoutX="723.0" layoutY="51.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Delete" />
       <Button fx:id="addButton" layoutX="723.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Add..." />
       <Button fx:id="editButton" layoutX="723.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0" text="Edit" />
       <ChoiceBox fx:id="choiceBox" layoutX="184.0" layoutY="38.0" prefWidth="150.0" />
+      <Text fx:id="userNameText" layoutX="309.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="178.0" />
+      <Text fx:id="errorCode" fill="RED" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="369.13671875" />
     </children>
 </AnchorPane>
