@@ -38,7 +38,7 @@ class MainController(@FXML val menuBar: MenuBar,
                      @FXML val pane: Pane,
                      @FXML val logOut: Button,
                      @FXML val delete: Button,
-                     //                     @FXML val edit: Button,
+                     @FXML val edit: Button,
                      @FXML val add: Button,
                      @FXML val choiceBox: ChoiceBox[EntityType],
                      @FXML val userNameText: Text,
@@ -269,15 +269,18 @@ class MainController(@FXML val menuBar: MenuBar,
 
 
   def updateEmployee = Platform.runLater {
-    val employee = employees.getSelectionModel.getSelectedItem
-    //        choiceBox.value = ManagerCreationEntities.Employee
-    new EmployeeDialog(employee).showAndWait() match {
-      case Some(value: Employee) =>
-        println(value)
-        employeeService.upsert(value).futureValue
-        choiceBox.value = ManagerCreationEntities.Employee
-      case None => ()
+    Option(employees.getSelectionModel.getSelectedItem).map { employee =>
+      new EmployeeDialog(employee).showAndWait() match {
+        case Some(value: Employee) =>
+          println(value)
+          employeeService.upsert(value).futureValue
+          choiceBox.value = ManagerCreationEntities.Employee
+        case None => ()
+      }
     }
+
+    //        choiceBox.value = ManagerCreationEntities.Employee
+
   }
 
   employees.contextMenu = new ContextMenu(
@@ -359,6 +362,8 @@ class MainController(@FXML val menuBar: MenuBar,
 
 
   choiceBox.value.onChange { (_, _, value) =>
+    if (value == ManagerCreationEntities.Employee) add.disable = true
+    else add.disable = false
     value match {
       case ManagerCreationEntities.Employee =>
         employees.items = employeesBuffer
