@@ -59,8 +59,9 @@ abstract class Repository[
   def upsert(entity: E): DBIOAction[E, NoStream, Effect.Write] =
     tableQuery.insertOrUpdate(entity).map(_ => entity)
 
-  def create(entities: Seq[E]): FixedSqlAction[Seq[E], NoStream, Effect.Write] =
-    tableQuery.returning(tableQuery) ++= entities
+
+  def create(entities: Seq[E]): FixedSqlAction[Option[Int], NoStream, Effect.Write] =
+    tableQuery ++= entities
 
 
   def update(query: EntityQuery, update: E => E): DBIOAction[E, NoStream, Effect.Read with Effect.Write with Effect.Transactional] =

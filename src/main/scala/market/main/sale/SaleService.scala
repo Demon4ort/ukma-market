@@ -24,4 +24,8 @@ class SaleService(implicit val db: SQLiteProfile.backend.Database) {
       }
     } yield entity
   }
+
+  def create(entities: Seq[Sale]) = {
+    repository.create(entities).future
+  }
 }

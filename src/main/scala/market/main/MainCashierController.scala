@@ -5,7 +5,7 @@ import market.SceneManager.Scenes
 import market.main.category.{Category, CategoryService}
 import market.main.credentials.{Address, PhoneNumber}
 import market.main.customer_card.{CustomerCard, CustomerCardService}
-import market.main.dialog.{BuyDialog, Dialogs, EmployeeDialog, ProductDialog}
+import market.main.dialog.{BuyDialog, Dialogs, EmployeeDialog, ProductDialog, ReceiptMap}
 import market.main.employee.Employee.Position
 import market.main.employee.{Employee, EmployeeService}
 import market.main.product.{Product, ProductService}
@@ -332,13 +332,16 @@ class MainCashierController(@FXML val menuBar: MenuBar,
     choiceBox.value.value match {
       case market.utils.ManagerCreationEntities.Sale | ManagerCreationEntities.Receipt =>
         new BuyDialog(App.employee.value).showAndWait() match {
-          case Some((receipt: Receipt, seq: Seq[Sale])) => Platform.runLater {
-            for {
-              _ <- receiptService.upsert(receipt)
-              _ <- Future.traverse(seq)(saleService.upsert)
+          case Some(value: ReceiptMap) => Platform.runLater {
+            val a = for {
+              _ <- receiptService.upsert(value.receipt)
+              _ <- saleService.create(value.sales)
             } yield ()
+            a.futureValue
+            choiceBox.value.value = ManagerCreationEntities.Receipt
           }
-          case None => ()
+
+          case None => println("Something wrong with receipt")
         }
       //      case market.utils.ManagerCreationEntities.Employee => updateEmployee
       case ManagerCreationEntities.Product => new ProductDialog(categoryService.all.futureValue).showAndWait() match {

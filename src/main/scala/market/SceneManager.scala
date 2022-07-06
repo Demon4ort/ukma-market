@@ -4,14 +4,12 @@ import market.main.employee.Employee.Positions.{Cashier, Manager}
 import market.main.employee.Employee.{Position, Positions}
 import market.utils.Alerts
 import market.utils.Errors.{ApplicationException, SceneError}
+import scalafx.Includes._
 import scalafx.scene.Scene
 import scalafxml.core.{FXMLView, NoDependencyResolver}
-import scalafx.Includes._
-
 import java.io.IOException
 import java.net.URL
-import scala.io.Source
-import scala.util.{Try, Using}
+import scala.util.Try
 
 object SceneManager {
 
@@ -39,7 +37,8 @@ object SceneManager {
     val n = next match {
       case Scenes.Main =>
         val pos = position.getOrElse {
-          Alerts.unknownError.showAndWait(); Positions.Unassigned
+          Alerts.unknownError.showAndWait()
+          Positions.Unassigned
         }
         pos match {
           case Cashier => Scenes.MainCashier

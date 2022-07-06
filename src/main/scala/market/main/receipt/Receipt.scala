@@ -31,7 +31,7 @@ object Receipt {
 
   class Receipts(tag: Tag) extends Table[Receipt](tag, "Receipt") {
 
-    def uuid = column[String]("check_number")
+    def uuid = column[String]("check_number", O.PrimaryKey)
 
     def employeeUUID = column[String]("id_employee")
 
