@@ -20,7 +20,9 @@ class EmployeeService(implicit val db: SQLiteProfile.backend.Database) {
 
   def delete(login: String) = repository.delete(Query(login.some)).future
 
-  def upsert(e: Employee) = repository.update(Query(login = e.login.some), _.copy(position = e.position, salary = e.salary)).future
+  def update(e: Employee) = repository.update(Query(login = e.login.some), _.copy(position = e.position, salary = e.salary)).future
+
+  def upsert(e: Employee) = repository.upsert(e).future
 
   def logIn(login: String, password: String): Future[Employee] = for {
     employee <- repository.findOneBy(Query(login = login.some)).future

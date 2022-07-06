@@ -15,7 +15,7 @@ case class Receipt(uuid: String,
                    cardUUID: Option[String],
                    creationDate: LocalDateTime,
                    totalSum: Double,
-                   pdv: Double) extends Entity {
+                   pdv: Double = 20) extends Entity {
   val _uuid = new StringProperty(this, "check number", uuid)
   val _employeeUUID = new StringProperty(this, "employee id", employeeUUID)
   val _creationDate = new ObjectProperty(this, "print date", creationDate)

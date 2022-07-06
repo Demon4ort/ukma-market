@@ -1,22 +1,28 @@
 package market.main.dialog
 
+import cats.implicits.{catsSyntaxOptionId, none}
 import market.App.stage
 import market.main.customer_card.CustomerCardService
 import market.main.employee.Employee
+import market.main.product.ProductRepository.Query
 import market.main.product.{Product, ProductService}
 import market.main.receipt.{Receipt, ReceiptService}
 import market.main.sale.{Sale, SaleService}
 import market.main.store_product.StoreProductService
+import market.utils.Repository.RepositoryOps
 import scalafx.Includes.jfxDialogPane2sfx
 import scalafx.application.Platform
 import scalafx.beans.property.{ObjectProperty, StringProperty}
 import scalafx.collections.ObservableBuffer
-import scalafx.scene.control.ButtonBar.ButtonData
-import scalafx.scene.control.{Button, ButtonType, ChoiceBox, ContextMenu, Dialog, MenuItem, TableColumn, TableView, TextField}
+import scalafx.scene.control.ButtonBar.{ButtonData, isButtonUniformSize}
+import scalafx.scene.control.{Button, ButtonType, ChoiceBox, ContextMenu, Dialog, MenuItem, TableColumn, TableView, TextField, TextInputDialog}
+import scalafx.scene.input.KeyCode.T
 import scalafx.scene.layout.{HBox, VBox}
 
+import java.time.LocalDateTime
 import java.util.UUID
 import scala.concurrent.ExecutionContext
+import scala.jdk.CollectionConverters.CollectionHasAsScala
 
 class BuyDialog(employee: Employee)(
   //  implicit val receiptService: ReceiptService,
@@ -27,48 +33,47 @@ class BuyDialog(employee: Employee)(
   implicit val ec: ExecutionContext) extends Dialog[(Receipt, Seq[Sale])] {
 
   initOwner(stage)
-  title = "Buy Dialog"
+  val receiptUUID: String = UUID.randomUUID.toString
+  title = s"Receipt #$receiptUUID"
 
   val okButtonType = new ButtonType("OK", ButtonData.OKDone)
   dialogPane().buttonTypes = Seq(okButtonType, ButtonType.Cancel)
 
-  val hBox = new HBox() {
-    spacing = 20
-  }
+
   val vBox = new VBox() {
     spacing = 20
   }
+  val hBox = new HBox() {
+    spacing = 20
+  }
 
-  case class ToBuy(sale: Sale, productName: String) {
-    val _name = new StringProperty(this, "name", productName)
+  case class ToBuy(sale: Sale, product: Product) {
+    val _name = new StringProperty(this, "name", product.name)
     val _price = new ObjectProperty(this, "price", sale.sellingPrice)
   }
 
   val toBuys = ObservableBuffer.empty[ToBuy]
 
-  val nameChoice = new ChoiceBox[String]() {
-    items = products
-  }
 
-  val products = ObservableBuffer(productService.all.futureValue.map(_.name): _*)
+  val products: ObservableBuffer[Product] = ObservableBuffer(productService.all.futureValue: _*)
   val field = new TextField() {
     promptText = "name"
   }
-  val auto = new Button("Auto") {
-    onAction = _ => if (field.text.value.length > 2) {
-      products.find(_.startsWith(field.text.value))
-        .orElse(
-          products.find(_.endsWith(field.text.value))
-        ).map { product =>
-        nameChoice.value = product
+
+
+  val tBox = new VBox() {
+    spacing = 20
+  }
+  val tableViewChoose = new TableView[Product](products) {
+    columns ++= Seq(
+      new TableColumn[Product, String]() {
+        text = "product name"
+        cellValueFactory = _.value._name
       }
-    }
+    )
   }
 
-  vBox.children = Seq(field, auto)
-
-
-  val tableView = new TableView[ToBuy](toBuys) {
+  val tableViewBucket = new TableView[ToBuy](toBuys) {
     prefWidth = 200
     prefHeight = 300
     columns ++= Seq(
@@ -79,24 +84,89 @@ class BuyDialog(employee: Employee)(
       new TableColumn[ToBuy, Double]() {
         text = "price"
         cellValueFactory = _.value._price
+      },
+      new TableColumn[ToBuy, Int]() {
+        text = "number"
+        cellValueFactory = _.value.sale._productNumber
       }
     )
   }
 
-  tableView.contextMenu = new ContextMenu(
+  tableViewChoose.contextMenu = new ContextMenu(
+    new MenuItem("buy") {
+      onAction = _ => {
+        val product = tableViewChoose.getSelectionModel.getSelectedItem
+        val store = storeProductService.findByProductUUID(product.uuid).futureValue
+        val num = new TextInputDialog() {
+          contentText = s"Available amount: ${store.productsNumber}"
+          headerText = "Number to buy"
+        }.showAndWait().fold(1)(_.toInt)
+        if (store.productsNumber >= num) {
+          if (store.productsNumber - num == 0) {
+            tableViewChoose.getItems.removeAll(product)
+          }
+          val i = toBuys.indexWhere(_.product.uuid == product.uuid)
+          if (i != -1) {
+            val number = toBuys.apply(i).sale.productNumber
+            val sale = new Sale(store.uuid, receiptUUID = receiptUUID, productNumber = num + number, sellingPrice = store.sellingPrice)
+            toBuys.update(i, ToBuy(sale, product))
+          } else {
+            val sale = new Sale(store.uuid, receiptUUID = receiptUUID, productNumber = num, sellingPrice = store.sellingPrice)
+            toBuys.addOne(ToBuy(sale, product))
+          }
+        }
+
+
+      }
+
+    }
+  )
+
+  tableViewBucket.contextMenu = new ContextMenu(
     new MenuItem("delete") {
       onAction = _ => {
-        val a = tableView.getSelectionModel.getSelectedItem
-        //        products.
+        val toBuy = tableViewBucket.getSelectionModel.getSelectedItem
+        tableViewBucket.getItems.removeAll(toBuy)
+        tableViewChoose.getItems.add(toBuy.product)
       }
     }
   )
 
-  hBox.children = Seq(vBox, tableView)
+  val auto = new Button("Auto") {
+    onAction = _ => if (field.text.value.length > 2) {
+      products.find(_.name.startsWith(field.text.value))
+        .orElse(
+          products.find(_.name.endsWith(field.text.value))
+        ).map { product =>
+        tableViewChoose.getSelectionModel.select(product)
+      }
+    }
+  }
 
-  dialogPane().content = hBox
+  hBox.children = Seq(field, auto)
+
+  tBox.children = Seq(tableViewBucket, tableViewChoose)
+
+
+  vBox.children = Seq(hBox, tBox)
+
+  dialogPane().content = vBox
   val conv = (dialogButton: ButtonType) =>
-    if (dialogButton == okButtonType) ???
+    if (dialogButton == okButtonType) {
+      val total = tableViewBucket.getItems.asScala.map { case ToBuy(sale, _) =>
+        sale.productNumber * sale.sellingPrice
+      }.sum
+      val sales = tableViewBucket.getItems.asScala.map { case ToBuy(sale, _) =>
+        sale
+      }
+      Receipt(
+        UUID.randomUUID.toString,
+        employee.uuid,
+        none,
+        LocalDateTime.now,
+        total
+      ) -> sales.toSeq
+    }
     else null
   resultConverter = conv
 }

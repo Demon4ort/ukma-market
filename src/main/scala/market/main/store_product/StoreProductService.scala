@@ -4,6 +4,7 @@ import cats.implicits.catsSyntaxOptionId
 import market.main.store_product.StoreProductRepository.Query
 import market.utils.Repository.RepositoryOps
 import slick.jdbc.SQLiteProfile
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class StoreProductService(implicit val db: SQLiteProfile.backend.Database) {
@@ -14,8 +15,12 @@ class StoreProductService(implicit val db: SQLiteProfile.backend.Database) {
 
   def delete(uuid: String) = repository.delete(Query(uuid.some)).future
 
+  def find(uuid: String) = repository.findOneBy(Query(uuid.some)).future
+
+  def findByProductUUID(productUUID: String) = repository.findOneBy(Query(productUUID = productUUID.some)).future
+
   def upsert(entity: StoreProduct) = {
-    val query = Query(uuid = entity.uuid.some)
+    val query = Query(entity.uuid.some)
     for {
       entityOpt <- repository.findOptionBy(query).future
       entity <- entityOpt match {

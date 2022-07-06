@@ -3,14 +3,18 @@ package market.main.sale
 import market.main.receipt.Receipt
 import slick.jdbc.SQLiteProfile.api._
 import market.main.product
+import market.main.store_product.StoreProduct
 import market.utils.Entity
 import scalafx.beans.property.ObjectProperty
 
+import java.util.UUID
+
 case class Sale(uuid: String,
                 receiptUUID: String,
-                storeProductUUID: String,
+                productNumber: Int,
                 sellingPrice: Double) extends Entity {
   val _sellingPrice = new ObjectProperty(this, "selling price", sellingPrice)
+  val _productNumber = new ObjectProperty(this, "number", productNumber)
 }
 
 object Sale {
@@ -24,7 +28,7 @@ object Sale {
 
     def receiptUUID = column[String]("check_number")
 
-    def productUUID = column[String]("product_number")
+    def productNumber = column[Int]("product_number")
 
     def sellingPrice = column[Double]("selling_price")
 
@@ -34,11 +38,11 @@ object Sale {
         onUpdate = ForeignKeyAction.Cascade, onDelete = ForeignKeyAction.NoAction)
 
     def productUUID_fk =
-      foreignKey("room_fk", productUUID,
-        product.Product.products)(_.uuid,
+      foreignKey("room_fk", uuid,
+        StoreProduct.storeProducts)(_.uuid,
         onUpdate = ForeignKeyAction.Cascade, onDelete = ForeignKeyAction.Cascade)
 
 
-    override def * = (uuid, receiptUUID, productUUID, sellingPrice) <> (Sale.tupled, Sale.unapply)
+    override def * = (uuid, receiptUUID, productNumber, sellingPrice) <> (Sale.tupled, Sale.unapply)
   }
 }

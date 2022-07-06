@@ -14,6 +14,8 @@ class CustomerCardService(implicit val db: SQLiteProfile.backend.Database) {
 
   def delete(uuid: String) = repository.delete(Query(uuid.some)).future
 
+  def find(uuid: String) = repository.findOneBy(Query(uuid.some)).future
+
 
   def all = repository.findBy(Query()).future
 }

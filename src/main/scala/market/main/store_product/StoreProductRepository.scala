@@ -12,11 +12,13 @@ class StoreProductRepository extends Repository[StoreProduct, StoreProducts, Que
   override implicit val db: SQLiteProfile.backend.Database = App.db
 
   override def findByQuery(query: Query): SQLiteProfile.api.Query[StoreProducts, StoreProduct, Seq] =
-    tableQuery.filterOpt(query.uuid)((t, q) => t.uuid === q)
+    tableQuery
+      .filterOpt(query.uuid)((t, q) => t.uuid === q)
+      .filterOpt(query.productUUID)((t, q) => t.productUUID === q)
 
   override def tableQuery = TableQuery[StoreProducts]
 }
 
 object StoreProductRepository {
-  case class Query(uuid: Option[String] = None)
+  case class Query(uuid: Option[String] = None, productUUID: Option[String] = None)
 }

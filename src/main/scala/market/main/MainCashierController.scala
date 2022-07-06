@@ -5,7 +5,7 @@ import market.SceneManager.Scenes
 import market.main.category.{Category, CategoryService}
 import market.main.credentials.{Address, PhoneNumber}
 import market.main.customer_card.{CustomerCard, CustomerCardService}
-import market.main.dialog.{Dialogs, EmployeeDialog, ProductDialog}
+import market.main.dialog.{BuyDialog, Dialogs, EmployeeDialog, ProductDialog}
 import market.main.employee.Employee.Position
 import market.main.employee.{Employee, EmployeeService}
 import market.main.product.{Product, ProductService}
@@ -22,6 +22,7 @@ import scalafx.application.Platform
 import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
+import scalafx.scene.control.Alert.AlertType
 import scalafx.scene.control._
 import scalafx.scene.layout.Pane
 import scalafx.scene.text.Text
@@ -30,6 +31,7 @@ import scalafxml.core.macros.sfxml
 import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 @sfxml
 class MainCashierController(@FXML val menuBar: MenuBar,
@@ -67,15 +69,6 @@ class MainCashierController(@FXML val menuBar: MenuBar,
   def storeProductsBuffer: ObservableBuffer[StoreProduct] = ObservableBuffer(storeProductService.all.futureValue: _*)
 
 
-  def deleteItem(run: => Unit) = new MenuItem("delete") {
-    onAction = _ => Platform.runLater {
-      areYouSure.showAndWait() match {
-        case Some(ButtonType.Yes) => run
-        case _ => receipts.getSelectionModel.clearSelection()
-      }
-    }
-  }
-
   lazy val storeProducts = new TableView[StoreProduct](storeProductsBuffer) {
     prefWidth = 600
     prefHeight = 300
@@ -96,12 +89,16 @@ class MainCashierController(@FXML val menuBar: MenuBar,
   }
 
   lazy val sales = new TableView[Sale](salesBuffer) {
-    prefWidth = 150
+    prefWidth = 300
     prefHeight = 300
     columns ++= Seq(
       new TableColumn[Sale, Double]() {
-        text = "sellingPrice"
+        text = "selling price"
         cellValueFactory = _.value._sellingPrice
+      },
+      new TableColumn[Sale, Int]() {
+        text = "product number"
+        cellValueFactory = _.value._productNumber
       }
     )
   }
@@ -228,27 +225,6 @@ class MainCashierController(@FXML val menuBar: MenuBar,
     )
   }
 
-
-  def updateEmployee = Platform.runLater {
-    Option(employees.getSelectionModel.getSelectedItem).map { employee =>
-      new EmployeeDialog(employee).showAndWait() match {
-        case Some(value: Employee) =>
-          println(value)
-          employeeService.upsert(value).futureValue
-          choiceBox.value = ManagerCreationEntities.Employee
-        case None => ()
-      }
-    }
-
-    //        choiceBox.value = ManagerCreationEntities.Employee
-
-  }
-
-  employees.contextMenu = new ContextMenu(
-    new MenuItem("addInfo") {
-      onAction = _ => updateEmployee
-    }
-  )
   receipts.contextMenu = new ContextMenu(
     new MenuItem("employee") {
       onAction = _ => Platform.runLater {
@@ -281,7 +257,7 @@ class MainCashierController(@FXML val menuBar: MenuBar,
   sales.contextMenu = new ContextMenu(
     new MenuItem("storeProduct") {
       onAction = _ => Platform.runLater {
-        val storeProductUUID = sales.getSelectionModel.getSelectedItem.storeProductUUID
+        val storeProductUUID = sales.getSelectionModel.getSelectedItem.productNumber
         choiceBox.value = ManagerCreationEntities.StoreProduct
         storeProducts.items = storeProducts.items.value.filter(_.uuid == storeProductUUID)
       }
@@ -289,7 +265,7 @@ class MainCashierController(@FXML val menuBar: MenuBar,
     new MenuItem("receipt") {
       onAction = _ => Platform.runLater {
         val receiptUUID = sales.getSelectionModel.getSelectedItem.receiptUUID
-        choiceBox.value = ManagerCreationEntities.Product
+        choiceBox.value = ManagerCreationEntities.Receipt
         receipts.items = receipts.items.value.filter(_.uuid == receiptUUID)
       }
     }
@@ -354,14 +330,22 @@ class MainCashierController(@FXML val menuBar: MenuBar,
   def addHandle(event: ActionEvent): Unit = Platform.runLater {
     println("adding")
     choiceBox.value.value match {
-      case market.utils.ManagerCreationEntities.Sale => ???
+      case market.utils.ManagerCreationEntities.Sale | ManagerCreationEntities.Receipt =>
+        new BuyDialog(App.employee.value).showAndWait() match {
+          case Some((receipt: Receipt, seq: Seq[Sale])) => Platform.runLater {
+            for {
+              _ <- receiptService.upsert(receipt)
+              _ <- Future.traverse(seq)(saleService.upsert)
+            } yield ()
+          }
+          case None => ()
+        }
       //      case market.utils.ManagerCreationEntities.Employee => updateEmployee
       case ManagerCreationEntities.Product => new ProductDialog(categoryService.all.futureValue).showAndWait() match {
         case Some(value: Product) => productService.upsert(value)
         case None => ()
       }
-      case ManagerCreationEntities.Receipt => ???
-      case market.utils.ManagerCreationEntities.CustomerCard => ???
+      //      case market.utils.ManagerCreationEntities.CustomerCard => ()
       case ManagerCreationEntities.Category => Dialogs.category.showAndWait() match {
         case Some(value) => categoryService.add(Category(UUID.randomUUID.toString, value))
         case None => ()

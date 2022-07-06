@@ -8,12 +8,15 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class ProductService(implicit val db: SQLiteProfile.backend.Database) {
 
-  private val repository = new ProductRepository
+  val repository = new ProductRepository
 
   def all = repository.findBy(Query()).future
 
 
   def delete(uuid: String) = repository.delete(Query(uuid.some)).future
+
+
+  def find(uuid: String) = repository.findOneBy(Query(uuid.some)).future
 
   def upsert(entity: Product) = {
     val query = Query(uuid = entity.uuid.some)
