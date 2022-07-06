@@ -12,9 +12,10 @@ class CustomerCardRepository extends Repository[CustomerCard, CustomerCards, Que
 
   override def tableQuery = TableQuery[CustomerCards]
 
-  override def findByQuery(query: Query): SQLiteProfile.api.Query[CustomerCards, CustomerCard, Seq] = tableQuery.filter(_.uuid === query.uuid)
+  override def findByQuery(query: Query): SQLiteProfile.api.Query[CustomerCards, CustomerCard, Seq] =
+    tableQuery.filterOpt(query.uuid)((t, q) => t.uuid === q)
 }
 
 object CustomerCardRepository {
-  case class Query(uuid: String)
+  case class Query(uuid: Option[String] = None)
 }

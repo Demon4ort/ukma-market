@@ -2,6 +2,8 @@ package market.main.store_product
 
 import slick.jdbc.SQLiteProfile.api._
 import market.main.product
+import market.utils.Entity
+import scalafx.beans.property.ObjectProperty
 import slick.lifted.ProvenShape
 
 
@@ -10,7 +12,13 @@ case class StoreProduct(uuid: String,
                         productUUID: String,
                         sellingPrice: Double,
                         productsNumber: Int,
-                        promotionalProduct: Boolean)
+                        promotionalProduct: Boolean) extends Entity {
+  val _sellingPrice = new ObjectProperty(this, "selling price", sellingPrice)
+
+  val _productsNumber = new ObjectProperty(this, "products number", productsNumber)
+
+  val _promotionalProduct = new ObjectProperty(this, "promotional product", promotionalProduct)
+}
 
 
 object StoreProduct {

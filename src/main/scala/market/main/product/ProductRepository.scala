@@ -12,7 +12,7 @@ import slick.jdbc.SQLiteProfile.api._
 class ProductRepository extends Repository[Product, Products, Query] {
 
   override def findByQuery(query: Query): SQLiteProfile.api.Query[Products, Product, Seq] =
-    tableQuery.filter(_.uuid === query.uuid)
+    tableQuery.filterOpt(query.uuid)((t, q) => t.uuid === q)
 
   override def tableQuery = TableQuery[Products]
 
@@ -21,6 +21,6 @@ class ProductRepository extends Repository[Product, Products, Query] {
 
 object ProductRepository {
 
-  case class Query(uuid: String)
+  case class Query(uuid: Option[String] = None)
 
 }

@@ -3,11 +3,15 @@ package market.main.sale
 import market.main.receipt.Receipt
 import slick.jdbc.SQLiteProfile.api._
 import market.main.product
+import market.utils.Entity
+import scalafx.beans.property.ObjectProperty
 
 case class Sale(uuid: String,
                 receiptUUID: String,
-                productUUID: String,
-                sellingPrice: Double)
+                storeProductUUID: String,
+                sellingPrice: Double) extends Entity {
+  val _sellingPrice = new ObjectProperty(this, "selling price", sellingPrice)
+}
 
 object Sale {
 

@@ -13,9 +13,10 @@ class ReceiptRepository extends Repository[Receipt, Receipts, Query] {
 
   override def tableQuery = TableQuery[Receipts]
 
-  override def findByQuery(query: Query): SQLiteProfile.api.Query[Receipts, Receipt, Seq] = tableQuery.filter(_.uuid === query.uuid)
+  override def findByQuery(query: Query): SQLiteProfile.api.Query[Receipts, Receipt, Seq] =
+    tableQuery.filterOpt(query.uuid)((t, q) => t.uuid === q)
 }
 
 object ReceiptRepository {
-  case class Query(uuid: String)
+  case class Query(uuid: Option[String] = None)
 }

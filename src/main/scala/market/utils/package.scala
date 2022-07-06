@@ -1,10 +1,15 @@
 package market
 
+import market.utils.Alerts.areYouSure
 import market.utils.FutureFxOps.defaultTimeout
+import scalafx.application.Platform
+import scalafx.scene.control.{ButtonType, ContextMenu, MenuItem, TableView}
+import scalafx.scene.input.KeyCode.E
 
 import scala.concurrent.duration.{Duration, DurationInt, FiniteDuration}
 import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
+import scala.reflect.ClassTag
 
 package object utils {
 
@@ -18,5 +23,6 @@ package object utils {
   object FutureFxOps {
     val defaultTimeout: FiniteDuration = 5 seconds
   }
+
 
 }

@@ -3,16 +3,25 @@ package market.main.receipt
 
 import market.main.customer_card.CustomerCard
 import market.main.employee.Employee
+import market.utils.Entity
+import scalafx.beans.property.{DoubleProperty, ObjectProperty, Property, StringProperty}
 import slick.jdbc.SQLiteProfile.api._
 
 import java.time.LocalDateTime
+import java.time.chrono.ChronoLocalDateTime
 
 case class Receipt(uuid: String,
                    employeeUUID: String,
                    cardUUID: Option[String],
                    creationDate: LocalDateTime,
                    totalSum: Double,
-                   pdv: Double)
+                   pdv: Double) extends Entity {
+  val _uuid = new StringProperty(this, "check number", uuid)
+  val _employeeUUID = new StringProperty(this, "employee id", employeeUUID)
+  val _creationDate = new ObjectProperty(this, "print date", creationDate)
+  val _totalSum = new ObjectProperty(this, "total sum", totalSum)
+  val _pdv = new ObjectProperty(this, "PDV", pdv)
+}
 
 object Receipt {
 

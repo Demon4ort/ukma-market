@@ -3,12 +3,15 @@ package market.main.employee
 import market.main.employee.Employee.Position
 import market.main.credentials.{Address, PhoneNumber}
 import market.main.product.Product.Products
+import market.utils.Entity
 import market.utils.Repository.enumMapper
+import scalafx.beans.property.{ObjectProperty, StringProperty}
 import slick.jdbc.SQLiteProfile.api._
 
 import java.time.LocalDate
+import java.util.UUID
 
-case class Employee(uuid: String,
+case class Employee(uuid: String = UUID.randomUUID.toString,
                     login: String,
                     password: String,
                     surname: String,
@@ -19,7 +22,18 @@ case class Employee(uuid: String,
                     dateOfBirth: LocalDate,
                     dateOfStart: LocalDate,
                     phoneNumber: PhoneNumber,
-                    address: Address)
+                    address: Address) extends Entity {
+  val _login = new StringProperty(this, "login", login)
+  val _surname = new StringProperty(this, "surname", surname)
+  val _name = new StringProperty(this, "name", name)
+  val _patronymic = new StringProperty(this, "patronymic", patronymic.getOrElse(""))
+  val _phoneNumber = new ObjectProperty(this, "date of start", phoneNumber)
+  val _address = new ObjectProperty(this, "address", address)
+  val _dateOfBirth = new ObjectProperty(this, "date of birth", dateOfBirth)
+  val _dateOfStart = new ObjectProperty(this, "phone", dateOfStart)
+  val _salary = new ObjectProperty(this, "salary", salary)
+  val _position = new ObjectProperty(this, "position", position)
+}
 
 object Employee {
   val employees: TableQuery[Employees] = TableQuery[Employees]
@@ -29,6 +43,7 @@ object Employee {
   type Position = Positions.Value
 
   object Positions extends Enumeration {
+    val Unassigned = Value("UNASSIGNED")
     val Cashier = Value("CASHIER")
     val Manager = Value("MANAGER")
   }

@@ -5,27 +5,30 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="791.0" prefWidth="794.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="market.login.SignUpController">
-   <children>
-      <HBox prefHeight="100.0" prefWidth="200.0">
-         <children>
-            <VBox minWidth="-Infinity" prefHeight="793.0" prefWidth="378.0" spacing="10.0">
-               <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" textAlignment="CENTER" wrappingWidth="300.0">
-                     <font>
-                        <Font name="Fira Code Regular" size="18.0" />
-                     </font>
-                  </Text>
-                  <Text fx:id="loginText" fill="RED" layoutX="30.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0">
-                     <font>
-                        <Font name="Fira Code Regular" size="10.0" />
-                     </font>
-                  </Text>
-                  <TextField fx:id="login" layoutX="30.0" layoutY="86.0" promptText="login">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </TextField>
+<AnchorPane prefHeight="791.0" prefWidth="794.0" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="market.login.SignUpController">
+    <children>
+        <HBox prefHeight="100.0" prefWidth="200.0">
+            <children>
+                <VBox minWidth="-Infinity" prefHeight="793.0" prefWidth="378.0" spacing="10.0">
+                    <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Sign Up" textAlignment="CENTER"
+                              wrappingWidth="300.0">
+                            <font>
+                                <Font name="Fira Code Regular" size="18.0"/>
+                            </font>
+                        </Text>
+                        <Text fx:id="loginText" fill="RED" layoutX="30.0" layoutY="72.0" strokeType="OUTSIDE"
+                              strokeWidth="0.0" wrappingWidth="300.0">
+                            <font>
+                                <Font name="Fira Code Regular" size="10.0"/>
+                            </font>
+                        </Text>
+                        <TextField fx:id="login" layoutX="30.0" layoutY="86.0" promptText="login">
+                            <font>
+                                <Font size="14.0"/>
+                            </font>
+                        </TextField>
                   <Text fx:id="nameText" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0">
                      <font>
                         <Font name="Fira Code Regular" size="10.0" />
@@ -63,7 +66,6 @@
                   </Text>
                   <PasswordField fx:id="password" promptText="password" />
                   <PasswordField fx:id="passwordAgain" promptText="password again" />
-                  <ChoiceBox fx:id="position" prefHeight="26.0" prefWidth="319.0" />
                   <DatePicker fx:id="dateOfBirth" promptText="date of birth" />
                   <Text fx:id="phoneNumberText" fill="RED" layoutX="30.0" layoutY="72.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="300.0">
                      <font>

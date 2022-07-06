@@ -1,6 +1,8 @@
 package market.main.customer_card
 
 import market.main.credentials.{Address, PhoneNumber}
+import market.utils.Entity
+import scalafx.beans.property.{ObjectProperty, StringProperty}
 import slick.jdbc.SQLiteProfile.api._
 
 
@@ -10,7 +12,14 @@ case class CustomerCard(uuid: String,
                         patronymic: Option[String],
                         phoneNumber: PhoneNumber,
                         address: Address,
-                        percentage: Int)
+                        percentage: Int) extends Entity {
+  val _surname = new StringProperty(this, "surname", surname)
+  val _name = new StringProperty(this, "name", name)
+  val _patronymic = new StringProperty(this, "patronymic", patronymic.getOrElse(""))
+  val _phoneNumber = new ObjectProperty(this, "phone", phoneNumber)
+  val _address = new ObjectProperty(this, "address", address)
+
+}
 
 object CustomerCard {
 

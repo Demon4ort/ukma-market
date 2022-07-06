@@ -13,7 +13,7 @@ class CategoryRepository extends Repository[Category, Categories, Query] {
 
 
   override def findByQuery(query: Query): SQLiteProfile.api.Query[Categories, Category, Seq] =
-    tableQuery.filter(_.uuid === query.uuid)
+    tableQuery.filterOpt(query.uuid)((t, q) => t.uuid === q)
 
   override def tableQuery = TableQuery[Categories]
 
@@ -22,6 +22,6 @@ class CategoryRepository extends Repository[Category, Categories, Query] {
 
 object CategoryRepository {
 
-  case class Query(uuid: String)
+  case class Query(uuid: Option[String] = None)
 
 }

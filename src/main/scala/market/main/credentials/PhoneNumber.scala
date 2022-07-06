@@ -3,7 +3,9 @@ package market.main.credentials
 import slick.jdbc.SQLiteProfile.api._
 
 case class PhoneNumber(number: String) {
-  require(number.length == 13)
+  require(number.length == 12)
+
+  override def toString = s"+$number"
 }
 
 object PhoneNumber {

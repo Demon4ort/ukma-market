@@ -5,16 +5,16 @@ VALUES (1, 'Beverages'),
        (4, 'cereals');
 INSERT INTO main.Product (product_id, category_id, product_name, product_characteristics)
 VALUES (1, 1, 'Beer', 'Beer from Lviv'),
-       (2, 1, 'Orange juice', NULL),
+       (2, 1, 'Orange juice', 'fresh'),
        (3, 1, 'Redbull', 'Energy drink'),
-       (4, 2, 'Chicken legs', NULL),
+       (4, 2, 'Chicken legs', 'big'),
        (5, 2, 'Sausages', 'Hot dog Sausages'),
        (6, 3, 'Milk', '8.5% Milk'),
        (7, 3, 'Yogurt', 'Strawberry yogurt'),
-       (8, 3, 'Cheese', NULL),
+       (8, 3, 'Cheese', 'yellow'),
        (9, 4, 'Buckwheat', 'Ordinary Buckwheat'),
        (10, 4, 'Rice', 'Good rice'),
-       (11, 4, 'Bulgur', NULL);
+       (11, 4, 'Bulgur', 'sumptuous');
 INSERT INTO Store_Product (upc, upc_prom, product_id, selling_price, products_number, promotional_product)
 VALUES (111111111111, 111111111111, 1, 5, 10, 1),
        (111111111112, 111111111112, 2, 3, 0, 0),
@@ -27,11 +27,16 @@ VALUES (111111111111, 111111111111, 1, 5, 10, 1),
        (666666666666, 666666666666, 9, 21, 3, 1),
        (777777777777, NULL, 10, 10, 10, 1),
        (101010101010, 101010101010, 11, 100, 32, 1);
--- INSERT INTO Employee (id_employee, empl_surname, empl_name, empl_patronymic, empl_role, salary, date_of_birth, date_of_start, phone_number, city, street, zip_code)
--- VALUES (1, 'Kohanyi', 'Andryi', 'Vasulyovuch', 'cashier', 2000, 2002-01-01, 2020-01-05, 380970970970, 'Kyiv', 'Dobra', 111111111),
---        (2, 'Romanova', 'Maria', 'Romanivna', 'manager', 3500, 1999-03-26, 2017-04-08, 380123456789, 'Lviv', 'Kolomyiska', 222222222),
---        (3, 'Kymednyi', 'Rosette', NULL, 'cashier', 2500, 1987-06-03, 2021-10-02, 380123123123, 'Kyiv', 'Ostannya', 333333333),
---        (4, 'Kashtan', 'Olga', 'Oleksandrivna', 'manager', 3500, 1976-01-28, 2015-12-12, 380970567234, 'Kharkiv', 'Vesnyana', 444444444);
+INSERT INTO Employee (id_employee, login, password, empl_surname, empl_name, empl_patronymic, empl_role, salary,
+                      date_of_birth, date_of_start, phone_number, city, street, zip_code)
+VALUES (1, 'abbbab', 'acscdscszc', 'Kohanyi', 'Andryi', 'Vasulyovuch', 'CASHIER', 2000, 2002 - 01 - 01, 2020 - 01 - 05,
+        380970970970, 'Kyiv', 'Dobra', 111111111),
+       (2, 'abbasbab', 'acscdscszc', 'Romanova', 'Maria', 'Romanivna', 'MANAGER', 3500, 1999 - 03 - 26, 2017 - 04 - 08,
+        380123456789, 'Lviv', 'Kolomyiska', 222222222),
+       (3, 'abbsdvbab', 'acscdscszc', 'Kymednyi', 'Rosette', NULL, 'CASHIER', 2500, 1987 - 06 - 03, 2021 - 10 - 02,
+        380123123123, 'Kyiv', 'Ostannya', 333333333),
+       (4, 'abbhytbab', 'acscdscszc', 'Kashtan', 'Olga', 'Oleksandrivna', 'MANAGER', 3500, 1976 - 01 - 28,
+        2015 - 12 - 12, 380970567234, 'Kharkiv', 'Vesnyana', 444444444);
 INSERT INTO Customer_Card (card_number, cust_surname, cust_name, cust_patronymic, phone_number, city, street, zip_code,
                            percentage)
 VALUES (1, 'Garnyi', 'Dima', 'Danulovuch', 380987123423, 'Lviv', 'Geroyiv', 123123123, 3),

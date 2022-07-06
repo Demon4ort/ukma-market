@@ -4,7 +4,7 @@ import javafx.fxml.FXML
 import scalafx.Includes._
 import market.SceneManager.Scenes
 import market.login.Alerts.employeeNotFoundAlert
-import market.main.employee.EmployeeService.EmployeeServiceDependency
+import market.main.employee.EmployeeService
 import market.{App, SceneManager}
 import scalafx.application.JFXApp3.Stage
 import scalafx.application.Platform
@@ -22,7 +22,8 @@ class LoginController(@FXML val userName: TextField,
                       @FXML val password: PasswordField,
                       @FXML val passwordText: Text,
                       @FXML val cancel: Button,
-                      @FXML val login: Button) extends EmployeeServiceDependency {
+                      @FXML val login: Button) {
+  lazy val employeeService: EmployeeService = App.employeeService
 
   App.reset
 
@@ -37,9 +38,10 @@ class LoginController(@FXML val userName: TextField,
     if (valid) {
       employeeService.logIn(userName.text.value, password.text.value).onComplete {
         case Failure(_) => Platform.runLater(employeeNotFoundAlert.showAndWait())
-        case Success(value) =>
+        case Success(value) => Platform.runLater {
           App.employee.value = value
-          Platform.runLater(Stage.setScene(SceneManager.switchTo(Scenes.Start)))
+          Stage.setScene(SceneManager.switchTo(Scenes.Main))
+        }
       }
     }
   }

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<DialogPane prefHeight="300.0" prefWidth="294.0" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="market.main.dialog.CategoryDialog">
+    <content>
+        <VBox prefHeight="200.0" prefWidth="100.0" spacing="40.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Category">
+                    <VBox.margin>
+                        <Insets left="100.0"/>
+                    </VBox.margin>
+                </Text>
+                <Text fx:id="nameText" fill="RED" layoutX="21.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0"/>
+                <TextField fx:id="name" layoutX="21.0" layoutY="37.0" promptText="name"/>
+                <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+                    <children>
+                        <Button fx:id="cancel" mnemonicParsing="false" text="Cancel" textFill="RED"/>
+                        <Button mnemonicParsing="false" text="OK" textFill="#0d9e00"/>
+                    </children>
+                    <padding>
+                        <Insets left="70.0" right="50.0"/>
+                    </padding>
+                </HBox>
+            </children>
+            <opaqueInsets>
+                <Insets left="40.0"/>
+            </opaqueInsets>
+        </VBox>
+    </content>
+</DialogPane>

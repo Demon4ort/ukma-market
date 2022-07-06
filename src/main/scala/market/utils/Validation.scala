@@ -1,7 +1,8 @@
 package market.utils
 
 import scalafx.event.subscriptions.Subscription
-import scalafx.scene.control.TextField
+import scalafx.scene.Node
+import scalafx.scene.control.{Button, TextField}
 import scalafx.scene.text.Text
 
 object Validation {
@@ -34,6 +35,13 @@ object Validation {
     def consumesOnlyNumbers = field.text.onChange { (_, old, str) =>
       if (!str.matches("\\d+")) {
         field.text.value = old
+      }
+    }
+
+    def nonEmpty(nodes: Seq[Node]) = {
+      nodes.foreach(_.disable = true)
+      field.text.onChange { (_, _, newValue) =>
+        nodes.foreach(_.disable = newValue.trim().isEmpty)
       }
     }
 

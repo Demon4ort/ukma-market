@@ -1,9 +1,16 @@
 package market.main.category
 
+import market.utils.Entity
+import scalafx.beans.property.StringProperty
 import slick.jdbc.SQLiteProfile.api._
 
-case class Category(uuid: String,
-                    name: String)
+import java.util.UUID
+
+case class Category(uuid: String = UUID.randomUUID.toString,
+                    name: String) extends Entity {
+  //  val _uuid = new StringProperty(this, "category id", uuid)
+  val _name = new StringProperty(this, "category name", name)
+}
 
 object Category {
 

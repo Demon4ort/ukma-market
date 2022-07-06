@@ -1,16 +1,16 @@
 CREATE TABLE IF NOT EXISTS main.Category
 (
     category_id   VARCHAR(256) NOT NULL,
-    category_name VARCHAR(256),
+    category_name VARCHAR(256) NOT NULL,
     PRIMARY KEY (category_id)
 );
 
 CREATE TABLE IF NOT EXISTS main.Product
 (
-    product_id              VARCHAR(256) NOT NULL,
-    category_id             VARCHAR(256),
-    product_name            VARCHAR(50),
-    product_characteristics VARCHAR(10000),
+    product_id              VARCHAR(256)   NOT NULL,
+    category_id             VARCHAR(256)   NOT NULL,
+    product_name            VARCHAR(50)    NOT NULL,
+    product_characteristics VARCHAR(10000) NOT NULL,
     PRIMARY KEY (product_id),
     FOREIGN KEY (category_id) REFERENCES Category (category_id) ON UPDATE CASCADE ON DELETE NO ACTION
 );
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS main.Store_Product
 CREATE TABLE IF NOT EXISTS main.Employee
 (
     id_employee     VARCHAR(256)   NOT NULL,
-    login           VARCHAR(256)   NOT NULL,
+    login           VARCHAR(256)   NOT NULL UNIQUE,
     password        VARCHAR(256)   NOT NULL,
     empl_surname    VARCHAR(50)    NOT NULL,
     empl_name       VARCHAR(50)    NOT NULL,
