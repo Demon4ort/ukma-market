@@ -1,16 +1,14 @@
 package market.main
 
-import cats.instances.uuid
 import javafx.fxml.FXML
 import market.SceneManager.Scenes
 import market.main.category.{Category, CategoryService}
 import market.main.credentials.{Address, PhoneNumber}
 import market.main.customer_card.{CustomerCard, CustomerCardService}
-import market.main.dialog.{BuyDialog, Dialogs, EmployeeDialog, ProductDialog}
+import market.main.dialog.{Dialogs, EmployeeDialog, ProductDialog}
 import market.main.employee.Employee.Position
 import market.main.employee.{Employee, EmployeeService}
-import market.main.product.ProductService
-import market.main.product.Product
+import market.main.product.{Product, ProductService}
 import market.main.receipt.{Receipt, ReceiptService}
 import market.main.sale.{Sale, SaleService}
 import market.main.store_product.{StoreProduct, StoreProductService}
@@ -18,32 +16,30 @@ import market.utils.Alerts.areYouSure
 import market.utils.ManagerCreationEntities.EntityType
 import market.utils.{FutureFxOps, ManagerCreationEntities}
 import market.{App, SceneManager}
+import scalafx.Includes._
 import scalafx.application.JFXApp3.Stage
 import scalafx.application.Platform
+import scalafx.beans.property.StringProperty
 import scalafx.collections.ObservableBuffer
 import scalafx.event.ActionEvent
 import scalafx.scene.control._
 import scalafx.scene.layout.Pane
 import scalafx.scene.text.Text
 import scalafxml.core.macros.sfxml
-import scalafx.Includes._
-import scalafx.beans.property.StringProperty
 
 import java.time.{LocalDate, LocalDateTime}
 import java.util.UUID
 import scala.concurrent.ExecutionContext.Implicits.global
 
 @sfxml
-class MainController(@FXML val menuBar: MenuBar,
-                     @FXML val pane: Pane,
-                     @FXML val logOut: Button,
-                     @FXML val delete: Button,
-                     @FXML val edit: Button,
-                     @FXML val add: Button,
-                     @FXML val choiceBox: ChoiceBox[EntityType],
-                     @FXML val userNameText: Text,
-                     @FXML val errorCode: Text
-                    ) {
+class MainCashierController(@FXML val menuBar: MenuBar,
+                            @FXML val pane: Pane,
+                            @FXML val logOut: Button,
+                            @FXML val add: Button,
+                            @FXML val choiceBox: ChoiceBox[EntityType],
+                            @FXML val userNameText: Text,
+                            @FXML val errorCode: Text
+                           ) {
 
   implicit lazy val receiptService: ReceiptService = App.receiptService
   implicit lazy val categoryService: CategoryService = App.categoryService
@@ -232,41 +228,6 @@ class MainController(@FXML val menuBar: MenuBar,
     )
   }
 
-  def receiptDelete = {
-    receiptService.delete(receipts.getSelectionModel.getSelectedItem.uuid).futureValue
-    receipts.items.value = receiptsBuffer
-  }
-
-  def productDelete = {
-    productService.delete(products.getSelectionModel.getSelectedItem.uuid).futureValue
-    products.items.value = productsBuffer
-  }
-
-  def categoryDelete = {
-    categoryService.delete(categories.getSelectionModel.getSelectedItem.uuid).futureValue
-    categories.items.value = categoriesBuffer
-  }
-
-  def employeeDelete = {
-    employeeService.delete(employees.getSelectionModel.getSelectedItem.uuid).futureValue
-    employees.items.value = employeesBuffer
-  }
-
-  def customerCardsDelete = {
-    customerCardService.delete(customerCards.getSelectionModel.getSelectedItem.uuid).futureValue
-    customerCards.items.value = customerCardsBuffer
-  }
-
-  def salesDelete = {
-    saleService.delete(sales.getSelectionModel.getSelectedItem.uuid).futureValue
-    sales.items.value = salesBuffer
-  }
-
-  def storeProductsDelete = {
-    storeProductService.delete(storeProducts.getSelectionModel.getSelectedItem.uuid).futureValue
-    storeProducts.items.value = storeProductsBuffer
-  }
-
 
   def updateEmployee = Platform.runLater {
     Option(employees.getSelectionModel.getSelectedItem).map { employee =>
@@ -284,13 +245,11 @@ class MainController(@FXML val menuBar: MenuBar,
   }
 
   employees.contextMenu = new ContextMenu(
-    deleteItem(employeeDelete),
     new MenuItem("addInfo") {
       onAction = _ => updateEmployee
     }
   )
   receipts.contextMenu = new ContextMenu(
-    deleteItem(receiptDelete),
     new MenuItem("employee") {
       onAction = _ => Platform.runLater {
         val employeeUUID = receipts.getSelectionModel.getSelectedItem.employeeUUID
@@ -300,7 +259,6 @@ class MainController(@FXML val menuBar: MenuBar,
     }
   )
   products.contextMenu = new ContextMenu(
-    deleteItem(productDelete),
     new MenuItem("category") {
       onAction = _ => Platform.runLater {
         val categoryUUID = products.getSelectionModel.getSelectedItem.categoryUUID
@@ -310,7 +268,6 @@ class MainController(@FXML val menuBar: MenuBar,
     }
   )
   categories.contextMenu = new ContextMenu(
-    deleteItem(categoryDelete),
     new MenuItem("products") {
       onAction = _ => Platform.runLater {
         val categoryUUID = categories.getSelectionModel.getSelectedItem.uuid
@@ -320,9 +277,8 @@ class MainController(@FXML val menuBar: MenuBar,
     }
   )
 
-  customerCards.contextMenu = new ContextMenu(deleteItem(customerCardsDelete))
+  //  customerCards.contextMenu = new ContextMenu(deleteItem(customerCardsDelete))
   sales.contextMenu = new ContextMenu(
-    deleteItem(salesDelete),
     new MenuItem("storeProduct") {
       onAction = _ => Platform.runLater {
         val storeProductUUID = sales.getSelectionModel.getSelectedItem.storeProductUUID
@@ -340,7 +296,6 @@ class MainController(@FXML val menuBar: MenuBar,
 
   )
   storeProducts.contextMenu = new ContextMenu(
-    deleteItem(storeProductsDelete),
     new MenuItem("promotion") {
       onAction = _ => Platform.runLater {
         val receiptUUID = storeProducts.getSelectionModel.getSelectedItem.promUUID
@@ -399,17 +354,14 @@ class MainController(@FXML val menuBar: MenuBar,
   def addHandle(event: ActionEvent): Unit = Platform.runLater {
     println("adding")
     choiceBox.value.value match {
-      case market.utils.ManagerCreationEntities.Sale => new BuyDialog(App.employee.value).showAndWait() match {
-        case Some(value: Receipt) => ???
-        case None => ()
-      }
+      case market.utils.ManagerCreationEntities.Sale => ???
       //      case market.utils.ManagerCreationEntities.Employee => updateEmployee
       case ManagerCreationEntities.Product => new ProductDialog(categoryService.all.futureValue).showAndWait() match {
         case Some(value: Product) => productService.upsert(value)
         case None => ()
       }
-      case ManagerCreationEntities.Receipt => ()
-      case market.utils.ManagerCreationEntities.CustomerCard => ()
+      case ManagerCreationEntities.Receipt => ???
+      case market.utils.ManagerCreationEntities.CustomerCard => ???
       case ManagerCreationEntities.Category => Dialogs.category.showAndWait() match {
         case Some(value) => categoryService.add(Category(UUID.randomUUID.toString, value))
         case None => ()

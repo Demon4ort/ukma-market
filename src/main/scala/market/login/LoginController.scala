@@ -1,5 +1,6 @@
 package market.login
 
+import cats.implicits.catsSyntaxOptionId
 import javafx.fxml.FXML
 import scalafx.Includes._
 import market.SceneManager.Scenes
@@ -40,7 +41,7 @@ class LoginController(@FXML val userName: TextField,
         case Failure(_) => Platform.runLater(employeeNotFoundAlert.showAndWait())
         case Success(value) => Platform.runLater {
           App.employee.value = value
-          Stage.setScene(SceneManager.switchTo(Scenes.Main))
+          Stage.setScene(SceneManager.switchTo(Scenes.Main, value.position.some))
         }
       }
     }

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="281.0" prefWidth="365.0" xmlns="http://javafx.com/javafx/11.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="market.main.MainCashierController">
+    <children>
+        <Button fx:id="logOut" layoutX="723.0" layoutY="13.0" mnemonicParsing="false" text=" Log Out"/>
+        <Button fx:id="add" layoutX="723.0" layoutY="84.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="63.0"
+                text="Add..."/>
+        <ChoiceBox fx:id="choiceBox" layoutX="399.0" layoutY="37.0" prefHeight="25.0" prefWidth="129.0"
+                   AnchorPane.leftAnchor="399.0" AnchorPane.rightAnchor="288.0"/>
+        <Text fx:id="userNameText" layoutX="309.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              wrappingWidth="178.0"/>
+        <Text fx:id="errorCode" fill="RED" layoutX="14.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              wrappingWidth="369.13671875"/>
+        <Text layoutX="286.0" layoutY="56.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Choose entity:"/>
+        <Text layoutX="32.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0"/>
+        <Pane fx:id="pane" layoutX="43.0" layoutY="77.0" prefHeight="420.0" prefWidth="671.0"/>
+    </children>
+</AnchorPane>
